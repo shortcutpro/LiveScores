@@ -6,96 +6,124 @@
 <title>Skor Langsung — Sepak Bola</title>
 <style>
   :root {
-    --bg: #0d1411; --panel: #14201a; --panel-2: #1a2a22; --line: #24382e;
-    --ink: #eaf2ec; --muted: #7f9c8b; --live: #3ddc84; --live-dim: #1c4a30;
-    --amber: #f5c542; --accent: #3ddc84;
-    --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --bg:#0d1411; --panel:#14201a; --panel-2:#1a2a22; --line:#24382e;
+    --ink:#eaf2ec; --muted:#7f9c8b; --live:#3ddc84; --live-dim:#1c4a30;
+    --amber:#f5c542; --accent:#3ddc84;
+    --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--ink); font-family: var(--font);
-    line-height: 1.5; -webkit-font-smoothing: antialiased; min-height: 100vh; }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
-  header { margin-bottom: 20px; }
-  .title { font-size: clamp(28px, 6vw, 40px); font-weight: 800; letter-spacing: -0.02em;
-    display: flex; align-items: center; gap: 12px; }
-  .pulse { width: 12px; height: 12px; border-radius: 50%; background: var(--live);
-    box-shadow: 0 0 0 0 rgba(61,220,132,.6); animation: pulse 2s infinite; flex: none; }
-  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(61,220,132,.5); }
-    70% { box-shadow: 0 0 0 10px rgba(61,220,132,0); }
-    100% { box-shadow: 0 0 0 0 rgba(61,220,132,0); } }
-  .sub { color: var(--muted); font-size: 14px; margin-top: 6px; }
-  .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 20px 0 18px; }
-  select { background: var(--panel); color: var(--ink); border: 1px solid var(--line);
-    border-radius: 10px; padding: 9px 12px; font-size: 14px; font-family: var(--font); outline: none; }
-  select:focus { border-color: var(--accent); }
-  button { background: transparent; color: var(--muted); border: 1px solid var(--line);
-    border-radius: 10px; padding: 9px 16px; font-weight: 600; font-size: 14px;
-    cursor: pointer; font-family: var(--font); }
-  button:hover { border-color: var(--accent); color: var(--ink); }
-  .refresh-note { color: var(--muted); font-size: 12px; margin-left: auto; }
-  .comp { margin-bottom: 22px; }
-  .comp-head { display: flex; align-items: center; gap: 10px; padding: 6px 2px 10px;
-    font-size: 13px; font-weight: 700; color: var(--muted);
-    border-bottom: 1px solid var(--line); margin-bottom: 8px; }
-  .comp-head img { width: 20px; height: 20px; object-fit: contain; }
-  .match { display: grid; grid-template-columns: 62px 1fr auto; gap: 12px; align-items: center;
-    padding: 12px 14px; background: var(--panel); border: 1px solid var(--line);
-    border-radius: 12px; margin-bottom: 8px; }
-  .match.is-live { border-color: var(--live-dim); background: var(--panel-2); }
-  .status { font-size: 11px; font-family: var(--mono); text-align: center; color: var(--muted); font-weight: 600; }
-  .status .min { color: var(--live); font-size: 15px; }
-  .status .live-tag { display: inline-block; background: var(--live-dim); color: var(--live);
-    padding: 2px 6px; border-radius: 5px; font-size: 10px; margin-top: 3px; }
-  .teams { min-width: 0; }
-  .team { display: flex; align-items: center; gap: 9px; font-size: 15px; padding: 2px 0;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .team img { width: 20px; height: 20px; object-fit: contain; flex: none; }
-  .team.win { font-weight: 700; }
-  .score { font-family: var(--mono); font-size: 20px; font-weight: 700; text-align: right; min-width: 42px; }
-  .score .live { color: var(--live); }
-  .score.pending { color: var(--muted); font-size: 13px; font-weight: 500; }
-  .empty, .msg { text-align: center; color: var(--muted); padding: 40px 16px; font-size: 15px; }
-  .msg.err { color: var(--amber); }
-  .spinner { width: 26px; height: 26px; border: 3px solid var(--line); border-top-color: var(--accent);
-    border-radius: 50%; margin: 30px auto; animation: spin .8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @media (max-width: 480px) {
-    .match { grid-template-columns: 54px 1fr auto; gap: 8px; padding: 10px; }
-    .team { font-size: 14px; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--ink); font-family:var(--font);
+    line-height:1.5; -webkit-font-smoothing:antialiased; min-height:100vh; }
+
+  .topbar { border-bottom:1px solid var(--line); background:var(--panel);
+    position:sticky; top:0; z-index:20; }
+  .topbar-in { max-width:1100px; margin:0 auto; padding:14px 16px;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .brand { font-size:22px; font-weight:800; letter-spacing:-.02em;
+    display:flex; align-items:center; gap:9px; }
+  .pulse { width:11px; height:11px; border-radius:50%; background:var(--live);
+    box-shadow:0 0 0 0 rgba(61,220,132,.6); animation:pulse 2s infinite; flex:none; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(61,220,132,.5);}
+    70%{box-shadow:0 0 0 9px rgba(61,220,132,0);} 100%{box-shadow:0 0 0 0 rgba(61,220,132,0);} }
+
+  .datebar { display:flex; gap:6px; margin-left:auto; align-items:center; flex-wrap:wrap; }
+  .datebar button { background:transparent; color:var(--muted); border:1px solid var(--line);
+    border-radius:9px; padding:7px 13px; font-size:13px; font-weight:600; cursor:pointer;
+    font-family:var(--font); white-space:nowrap; }
+  .datebar button:hover { color:var(--ink); border-color:var(--accent); }
+  .datebar button.active { background:var(--accent); color:#062012; border-color:var(--accent); }
+  .datebar input[type=date] { background:var(--bg); color:var(--ink); border:1px solid var(--line);
+    border-radius:9px; padding:6px 9px; font-size:13px; font-family:var(--font);
+    color-scheme:dark; outline:none; }
+
+  .shell { max-width:1100px; margin:0 auto; padding:18px 16px 64px;
+    display:grid; grid-template-columns:220px 1fr; gap:22px; }
+  @media (max-width:760px) { .shell { grid-template-columns:1fr; } .side { display:none; } }
+
+  .side { position:sticky; top:74px; align-self:start; }
+  .side h3 { font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.04em;
+    text-transform:uppercase; padding:0 8px 8px; }
+  .side a { display:flex; align-items:center; gap:9px; padding:8px; border-radius:9px;
+    color:var(--ink); text-decoration:none; font-size:14px; cursor:pointer; }
+  .side a:hover { background:var(--panel); }
+  .side a.active { background:var(--panel-2); color:var(--accent); }
+  .side a img { width:18px; height:18px; object-fit:contain; flex:none; }
+  .side a .cnt { margin-left:auto; font-size:11px; color:var(--muted); font-family:var(--mono); }
+
+  .main { min-width:0; }
+  .subtitle { color:var(--muted); font-size:13px; margin-bottom:14px; }
+  .subtitle b { color:var(--ink); font-weight:600; }
+
+  .comp { margin-bottom:22px; scroll-margin-top:80px; }
+  .comp-head { display:flex; align-items:center; gap:10px; padding:6px 2px 10px;
+    font-size:14px; font-weight:700; color:var(--ink);
+    border-bottom:1px solid var(--line); margin-bottom:8px; }
+  .comp-head img { width:22px; height:22px; object-fit:contain; }
+  .comp-head .area { color:var(--muted); font-weight:500; font-size:12px; margin-left:auto; }
+
+  .match { display:grid; grid-template-columns:60px 1fr auto; gap:12px; align-items:center;
+    padding:11px 14px; background:var(--panel); border:1px solid var(--line);
+    border-radius:12px; margin-bottom:7px; }
+  .match.is-live { border-color:var(--live-dim); background:var(--panel-2); }
+  .status { font-size:11px; font-family:var(--mono); text-align:center; color:var(--muted); font-weight:600; }
+  .status .min { color:var(--live); font-size:15px; }
+  .status .live-tag { display:inline-block; background:var(--live-dim); color:var(--live);
+    padding:2px 6px; border-radius:5px; font-size:10px; margin-top:3px; }
+  .teams { min-width:0; }
+  .team { display:flex; align-items:center; gap:9px; font-size:15px; padding:2px 0;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .team img { width:20px; height:20px; object-fit:contain; flex:none; }
+  .team.win { font-weight:700; }
+  .score { font-family:var(--mono); font-size:20px; font-weight:700; text-align:right; min-width:42px; }
+  .score .live { color:var(--live); }
+  .score.pending { color:var(--muted); font-size:13px; font-weight:500; }
+
+  .empty,.msg { text-align:center; color:var(--muted); padding:48px 16px; font-size:15px; }
+  .msg.err { color:var(--amber); }
+  .spinner { width:26px; height:26px; border:3px solid var(--line); border-top-color:var(--accent);
+    border-radius:50%; margin:40px auto; animation:spin .8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  @media (max-width:480px) {
+    .match { grid-template-columns:52px 1fr auto; gap:8px; padding:10px; }
+    .team { font-size:14px; }
+    .brand { font-size:19px; }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="title"><span class="pulse"></span>Skor Langsung</div>
-    <div class="sub">Pertandingan sepak bola hari ini — via Vercel + football-data.org</div>
-  </header>
-  <div class="controls">
-    <select id="filter">
-      <option value="all">Semua status</option>
-      <option value="live">Sedang berlangsung</option>
-      <option value="upcoming">Akan datang</option>
-      <option value="finished">Selesai</option>
-    </select>
-    <select id="scope">
-      <option value="today">Hari ini</option>
-      <option value="live">Live saja</option>
-    </select>
-    <button id="reload">Muat ulang</button>
-    <span class="refresh-note" id="note">Auto-refresh 60 dtk saat ada laga live</span>
-  </div>
-  <div id="content"><div class="spinner"></div></div>
-</div>
-<script>
-// Proxy serverless Vercel — path relatif, satu domain dengan halaman ini.
-const PROXY = "/api/matches";
 
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand"><span class="pulse"></span>Skor Langsung</div>
+    <div class="datebar" id="datebar">
+      <button data-off="-1">Kemarin</button>
+      <button data-off="0" class="active">Hari ini</button>
+      <button data-off="1">Besok</button>
+      <button data-scope="live">Live</button>
+      <input type="date" id="datepick">
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="side">
+    <h3>Kompetisi</h3>
+    <nav id="sidenav"><a class="active" data-code="all">Semua liga</a></nav>
+  </aside>
+  <main class="main">
+    <div class="subtitle" id="subtitle"></div>
+    <div id="content"><div class="spinner"></div></div>
+  </main>
+</div>
+
+<script>
+const PROXY = "/api/matches";
 const $ = s => document.querySelector(s);
 const content = $("#content");
-let timer = null;
 let lastData = [];
+let activeCode = "all";
+let timer = null;
 
 const COMP_ORDER = ["CL","PL","PD","SA","BL1","FL1","DED","PPL","ELC","BSA","EC","WC"];
 const COMP_NAME = {
@@ -107,24 +135,39 @@ const COMP_NAME = {
 const LIVE = new Set(["IN_PLAY","PAUSED","LIVE"]);
 const DONE = new Set(["FINISHED","AWARDED"]);
 
-$("#reload").onclick = fetchMatches;
-$("#filter").onchange = render;
-$("#scope").onchange = fetchMatches;
+function ymd(d){ return d.toISOString().slice(0,10); }
+function dateFromOffset(off){ const d=new Date(); d.setDate(d.getDate()+off); return ymd(d); }
 
-async function fetchMatches(){
+// datebar handlers
+$("#datebar").addEventListener("click", e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  [...$("#datebar").querySelectorAll("button")].forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  $("#datepick").value = "";
+  if(b.dataset.scope === "live"){ load({scope:"live"}); }
+  else { load({date: dateFromOffset(parseInt(b.dataset.off,10))}); }
+});
+$("#datepick").addEventListener("change", e=>{
+  if(!e.target.value) return;
+  [...$("#datebar").querySelectorAll("button")].forEach(x=>x.classList.remove("active"));
+  load({date: e.target.value});
+});
+
+let current = { date: dateFromOffset(0) };
+
+async function load(opt){
+  current = opt;
   content.innerHTML = '<div class="spinner"></div>';
-  const scope = $("#scope").value;
+  const q = opt.scope === "live" ? "scope=live" : ("date=" + opt.date);
   try {
-    const res = await fetch(PROXY + "?scope=" + scope);
+    const res = await fetch(PROXY + "?" + q);
     if(res.status === 429){ msg("Kena batas rate (429). Tunggu sebentar lalu muat ulang.", true); return; }
     if(res.status === 403){ msg("Token ditolak (403). Periksa FD_TOKEN di Vercel atau kuota tier gratis.", true); stopTimer(); return; }
-    if(!res.ok){
-      let d=""; try{ d=(await res.json()).error||""; }catch(e){}
-      msg("Gagal memuat (HTTP " + res.status + "). " + d, true); return;
-    }
+    if(!res.ok){ let d=""; try{ d=(await res.json()).error||""; }catch(e){} msg("Gagal memuat (HTTP "+res.status+"). "+d, true); return; }
     const data = await res.json();
     if(data.error){ msg(data.error, true); return; }
     lastData = data.matches || [];
+    buildSidebar();
     render();
     scheduleAuto();
   } catch(e){
@@ -132,75 +175,114 @@ async function fetchMatches(){
   }
 }
 
+function label(){
+  if(current.scope === "live") return "Sedang berlangsung";
+  const t = dateFromOffset(0), y = dateFromOffset(-1), tm = dateFromOffset(1);
+  if(current.date === t) return "Hari ini";
+  if(current.date === y) return "Kemarin";
+  if(current.date === tm) return "Besok";
+  return new Date(current.date+"T00:00:00").toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+}
+
+function grouped(){
+  const g = {};
+  for(const m of lastData){
+    const code = (m.competition && m.competition.code) || "??";
+    (g[code] = g[code] || []).push(m);
+  }
+  return g;
+}
+
+function buildSidebar(){
+  const g = grouped();
+  const codes = Object.keys(g).sort((a,b)=>{
+    const ia=COMP_ORDER.indexOf(a), ib=COMP_ORDER.indexOf(b);
+    return (ia<0?99:ia)-(ib<0?99:ib);
+  });
+  let html = '<a class="'+(activeCode==="all"?"active":"")+'" data-code="all">Semua liga<span class="cnt">'+lastData.length+'</span></a>';
+  for(const code of codes){
+    const comp = g[code][0].competition;
+    html += '<a class="'+(activeCode===code?"active":"")+'" data-code="'+code+'">' +
+      (comp.emblem?'<img src="'+comp.emblem+'" alt="">':"") +
+      escapeHtml(COMP_NAME[code]||comp.name||code) +
+      '<span class="cnt">'+g[code].length+'</span></a>';
+  }
+  const nav = $("#sidenav");
+  nav.innerHTML = html;
+  nav.querySelectorAll("a").forEach(a=>{
+    a.onclick = ()=>{ activeCode = a.dataset.code; buildSidebar(); render(); };
+  });
+}
+
 function render(){
-  const filter = $("#filter").value;
+  $("#subtitle").innerHTML = "Menampilkan <b>"+escapeHtml(label())+"</b> — "+lastData.length+" pertandingan · 12 kompetisi (tier gratis)";
   let matches = lastData.slice();
-  if(filter === "live") matches = matches.filter(m => LIVE.has(m.status));
-  else if(filter === "upcoming") matches = matches.filter(m => m.status === "TIMED" || m.status === "SCHEDULED");
-  else if(filter === "finished") matches = matches.filter(m => DONE.has(m.status));
+  if(activeCode !== "all") matches = matches.filter(m => (m.competition && m.competition.code) === activeCode);
 
   if(!matches.length){
-    content.innerHTML = '<div class="empty">Tidak ada pertandingan untuk filter ini.</div>';
+    content.innerHTML = '<div class="empty">Tidak ada pertandingan untuk pilihan ini.</div>';
     return;
   }
-  const groups = {};
+  const g = {};
   for(const m of matches){
     const code = (m.competition && m.competition.code) || "??";
-    (groups[code] = groups[code] || []).push(m);
+    (g[code] = g[code] || []).push(m);
   }
-  const codes = Object.keys(groups).sort((a,b)=>{
-    const ia = COMP_ORDER.indexOf(a), ib = COMP_ORDER.indexOf(b);
-    return (ia<0?99:ia) - (ib<0?99:ib);
+  const codes = Object.keys(g).sort((a,b)=>{
+    const ia=COMP_ORDER.indexOf(a), ib=COMP_ORDER.indexOf(b);
+    return (ia<0?99:ia)-(ib<0?99:ib);
   });
   let html = "";
   for(const code of codes){
-    const g = groups[code];
-    const comp = g[0].competition;
-    html += '<div class="comp"><div class="comp-head">' + (comp.emblem?'<img src="'+comp.emblem+'" alt="">':"") + escapeHtml(COMP_NAME[code]||comp.name||code) + '</div>';
-    g.sort((a,b)=> new Date(a.utcDate) - new Date(b.utcDate));
-    for(const m of g) html += matchRow(m);
+    const list = g[code]; const comp = list[0].competition;
+    const area = comp.area && comp.area.name ? comp.area.name : "";
+    html += '<div class="comp" id="c-'+code+'"><div class="comp-head">' +
+      (comp.emblem?'<img src="'+comp.emblem+'" alt="">':"") +
+      escapeHtml(COMP_NAME[code]||comp.name||code) +
+      (area?'<span class="area">'+escapeHtml(area)+'</span>':'') + '</div>';
+    list.sort((a,b)=> new Date(a.utcDate)-new Date(b.utcDate));
+    for(const m of list) html += matchRow(m);
     html += '</div>';
   }
   content.innerHTML = html;
 }
 
 function matchRow(m){
-  const live = LIVE.has(m.status);
-  const done = DONE.has(m.status);
+  const live = LIVE.has(m.status), done = DONE.has(m.status);
   const h = m.homeTeam, a = m.awayTeam;
   const hs = m.score && m.score.fullTime ? m.score.fullTime.home : null;
   const as = m.score && m.score.fullTime ? m.score.fullTime.away : null;
   const hasScore = hs !== null && hs !== undefined;
   let statusHtml;
   if(live){
-    const min = m.minute ? (m.minute + "'") : (m.status==="PAUSED" ? "HT" : "LIVE");
-    statusHtml = '<div class="status"><span class="min">' + escapeHtml(String(min)) + '</span><br><span class="live-tag">LIVE</span></div>';
+    const min = m.minute ? (m.minute+"'") : (m.status==="PAUSED"?"HT":"LIVE");
+    statusHtml = '<div class="status"><span class="min">'+escapeHtml(String(min))+'</span><br><span class="live-tag">LIVE</span></div>';
   } else if(done){
     statusHtml = '<div class="status">FT</div>';
   } else {
     const t = new Date(m.utcDate).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"});
-    statusHtml = '<div class="status">' + t + '</div>';
+    statusHtml = '<div class="status">'+t+'</div>';
   }
-  const hWin = hasScore && hs > as, aWin = hasScore && as > hs;
+  const hWin = hasScore && hs>as, aWin = hasScore && as>hs;
   const scoreHtml = hasScore
-    ? '<div class="score">' + (live?'<span class="live">':'') + hs + '–' + as + (live?'</span>':'') + '</div>'
+    ? '<div class="score">'+(live?'<span class="live">':'')+hs+'–'+as+(live?'</span>':'')+'</div>'
     : '<div class="score pending">vs</div>';
-  return '<div class="match ' + (live?'is-live':'') + '">' + statusHtml +
-    '<div class="teams">' +
-      '<div class="team ' + (hWin?'win':'') + '">' + (h.crest?'<img src="'+h.crest+'" alt="">':"") + escapeHtml(h.shortName||h.name) + '</div>' +
-      '<div class="team ' + (aWin?'win':'') + '">' + (a.crest?'<img src="'+a.crest+'" alt="">':"") + escapeHtml(a.shortName||a.name) + '</div>' +
-    '</div>' + scoreHtml + '</div>';
+  return '<div class="match '+(live?'is-live':'')+'">'+statusHtml+
+    '<div class="teams">'+
+      '<div class="team '+(hWin?'win':'')+'">'+(h.crest?'<img src="'+h.crest+'" alt="">':"")+escapeHtml(h.shortName||h.name)+'</div>'+
+      '<div class="team '+(aWin?'win':'')+'">'+(a.crest?'<img src="'+a.crest+'" alt="">':"")+escapeHtml(a.shortName||a.name)+'</div>'+
+    '</div>'+scoreHtml+'</div>';
 }
 
 function scheduleAuto(){
   stopTimer();
-  if(lastData.some(m => LIVE.has(m.status))) timer = setTimeout(fetchMatches, 60000);
+  if(lastData.some(m => LIVE.has(m.status))) timer = setTimeout(()=>load(current), 60000);
 }
-function stopTimer(){ if(timer){ clearTimeout(timer); timer = null; } }
-function msg(text, err){ content.innerHTML = '<div class="msg ' + (err?'err':'') + '">' + escapeHtml(text) + '</div>'; }
+function stopTimer(){ if(timer){ clearTimeout(timer); timer=null; } }
+function msg(text, err){ content.innerHTML = '<div class="msg '+(err?'err':'')+'">'+escapeHtml(text)+'</div>'; }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-fetchMatches();
+load({date: dateFromOffset(0)});
 </script>
 </body>
 </html>
